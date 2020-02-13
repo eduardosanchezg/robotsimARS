@@ -10,16 +10,16 @@ class Robot:
         self.environment = environment
         self.pos = np.array([posX, posY, orientation])
         self.radius = radius
-        self.velocity = np.array([16, 8])
+        self.velocity = np.array([0, 0])
 
     def accLeft(self, dl):
-        pass
+        self.velocity[0] += dl
 
     def accRight(self, dr):
-        pass
+        self.velocity[1] += dr
 
     def stop(self):
-        pass
+        self.velocity = np.array([0,0])
 
     def time_step(self, dt):
         if self.velocity[0] == self.velocity[1]:
@@ -29,6 +29,5 @@ class Robot:
         transform = np.array([[np.cos(w*dt), -np.sin(w*dt), 0], [np.sin(w*dt), np.cos(w*dt), 0], [0,0,1]])
         icc = np.array([self.pos[0] - R*np.sin(self.pos[2]), self.pos[1] + R*np.cos(self.pos[2]), 0])
         self.pos = np.dot(transform, (self.pos-icc))
-        self.pos += icc
-        self.pos += np.array([0,0,w*dt])
+        self.pos += icc + np.array([0,0,w*dt])
     #todo: sensors stuff

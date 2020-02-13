@@ -13,11 +13,31 @@ screen.fill((255, 255, 255))
 
 run = True
 
+
 while run:
+
     pygame.time.delay(100)
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                robot.accLeft(1)
+            if event.key == pygame.K_s:
+                robot.accLeft(-1)
+            if event.key == pygame.K_o:
+                robot.accRight(1)
+            if event.key == pygame.K_l:
+                robot.accRight(1)
+            if event.key == pygame.K_x:
+                robot.stop()
+            if event.key == pygame.K_t:
+                robot.accLeft(1)
+                robot.accRight(1)
+            if event.key == pygame.K_g:
+                robot.accLeft(-1)
+                robot.accRight(-1)
 
     #next_simulation_step
     robot.time_step(1)
