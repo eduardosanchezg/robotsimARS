@@ -3,7 +3,7 @@ import math
 
 class Robot:
     radius = 0
-    max_sensor_range = 200
+    max_sensor_range = radius + 200
     velocity = np.array([]) #len 2 vector
     environment = None
     pos = np.array([]) # vector saving position and orientation
@@ -42,7 +42,7 @@ class Robot:
             x = max_sensor_range * np.cos(self.pos[2] + i*30) + self.pos[0]
             y = max_sensor_range * np.sin(self.pos[2] + i*30) + self.pos[1]
             sensor_data = plotLine(self.pos[0], self.pos[1], x, y)
-            self.sensors[i][0] = sensor_data[0] # range
+            self.sensors[i][0] = sensor_data[0] - self.radius # range
             self.sensors[i][1] = sensor_data[1] # x
             self.sensors[i][2] = sensor_data[2] # y
 
