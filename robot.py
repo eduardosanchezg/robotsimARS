@@ -13,7 +13,9 @@ class Robot:
         self.pos = np.array([posX, posY, orientation])
         self.radius = radius
         self.velocity = np.array([0, 0])
-        self.sensors = np.full(12, max_sensor_range)
+        # Sensor format: [range, x, y]
+        self.sensors = np.zeros((12, 3))
+        self.refresh_sensors()
 
     def accLeft(self, dl):
         self.velocity[0] += dl
@@ -36,78 +38,13 @@ class Robot:
         self.refresh_sensors()
     
     def refresh_sensors(self):
-        self.scan0()
-        self.scan1()
-        self.scan2()
-        self.scan3()
-        self.scan4()
-        self.scan5()
-        self.scan6()
-        self.scan7()
-        self.scan8()
-        self.scan9()
-        self.scan10()
-        self.scan11()
-
-    def scan0(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 0) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 0) + self.pos[1]
-        self.sensors[0] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan1(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 30) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 30) + self.pos[1]
-        self.sensors[1] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan2(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 60) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 60) + self.pos[1]
-        self.sensors[2] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan3(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 90) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 90) + self.pos[1]
-        self.sensors[3] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan4(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 120) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 120) + self.pos[1]
-        self.sensors[4] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan5(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 150) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 150) + self.pos[1]
-        self.sensors[5] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan6(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 180) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 180) + self.pos[1]
-        self.sensors[6] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan7(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 210) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 210) + self.pos[1]
-        self.sensors[7] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan8(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 240) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 240) + self.pos[1]
-        self.sensors[8] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan9(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 270) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 270) + self.pos[1]
-        self.sensors[9] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan10(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 300) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 0) + self.pos[1]
-        self.sensors[10] = plotLine(self.pos[0], self.pos[1], x, y)
-
-    def scan11(self):
-        x = max_sensor_range * np.cos(self.pos[2] + 330) + self.pos[0]
-        y = max_sensor_range * np.sin(self.pos[2] + 330) + self.pos[1]
-        self.sensors[11] = plotLine(self.pos[0], self.pos[1], x, y)
+        for i in range(12):
+            x = max_sensor_range * np.cos(self.pos[2] + i*30) + self.pos[0]
+            y = max_sensor_range * np.sin(self.pos[2] + i*30) + self.pos[1]
+            sensor_data = plotLine(self.pos[0], self.pos[1], x, y)
+            self.sensors[i][0] = sensor_data[0] # range
+            self.sensors[i][1] = sensor_data[1] # x
+            self.sensors[i][2] = sensor_data[2] # y
 
 
     # CODE BASED ON BRESENHAM'S LINE ALGORITHM TO PLOT SENSOR LINE:
@@ -135,12 +72,12 @@ class Robot:
         y = y0
         for x in range (x0, x1):
             if environment[x,y] == 1:
-                return math.sqrt(((self.pos[0] - x)**2) + (self.pos[1] - y)**2)
+                return (math.sqrt(((self.pos[0] - x)**2) + (self.pos[1] - y)**2), x, y)
             if D > 0:
                    y = y + yi
                    D = D - 2*dx
             D = D + 2*dy
-        return max_sensor_range
+        return (max_sensor_range, x1, y1)
 
     def plotLineHigh(x0,y0, x1,y1):
         dx = x1 - x0
@@ -153,9 +90,9 @@ class Robot:
         x = x0
         for y in range (y0, y1):
             if environment[x,y] == 1:
-                    return math.sqrt(((self.pos[0] - x)**2) + (self.pos[1] - y)**2)
+                    return (math.sqrt(((self.pos[0] - x)**2) + (self.pos[1] - y)**2), x, y)
             if D > 0:
                    x = x + xi
                    D = D - 2*dy
             D = D + 2*dx
-        return max_sensor_range
+        return (max_sensor_range, x1, y1)
