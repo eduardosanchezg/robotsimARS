@@ -4,7 +4,7 @@ import environment, robot
 
 
 environment = environment.Environment()
-robot = robot.Robot(environment,250,250,0,50)
+robot = robot.Robot(environment,250,250,0.,50)
 
 pygame.init()
 pygame.display.set_caption("ARS Robot Simulation")
@@ -16,7 +16,7 @@ run = True
 
 while run:
 
-    pygame.time.delay(100)
+    pygame.time.delay(2000)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -41,5 +41,5 @@ while run:
 
     #next_simulation_step
     robot.time_step(1)
-    pygame.draw.circle(screen,(100,100,100), (robot.pos[0],robot.pos[1]),robot.radius)
+    pygame.draw.circle(screen,(100,100,100), (int(robot.pos[0]),int(robot.pos[1])),robot.radius)
     pygame.display.update()

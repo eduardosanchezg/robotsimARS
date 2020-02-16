@@ -22,7 +22,10 @@ class Robot:
         self.velocity = np.array([0,0])
 
     def time_step(self, dt):
+        print(self.pos)
+        print(self.velocity)
         if self.velocity[0] == self.velocity[1]:
+            self.pos += (self.velocity[0] + self.velocity[1]) * np.array([np.sin(self.pos[2]), np.cos(self.pos[2]), 0])
             return
         R = (self.radius) * (np.sum(self.velocity)) / (np.diff(self.velocity))
         w = np.diff(self.velocity)/(2 * self.radius)
