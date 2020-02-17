@@ -3,7 +3,7 @@ import pygame.locals
 import environment, robot
 
 
-environment = environment.Environment()
+environment = environment.Environment(1000,1000)
 robot = robot.Robot(environment,250,250,0.,50)
 
 pygame.init()

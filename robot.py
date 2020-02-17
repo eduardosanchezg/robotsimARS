@@ -74,7 +74,7 @@ class Robot:
         D = 2*dy - dx
         y = y0
         for x in range (x0.astype(np.int64), x1.astype(np.int64)):
-            if self.environment.grid[x][y] == 1:
+            if self.environment.grid[int(x)][int(y)] == 1:
                 return (math.sqrt(((self.pos[0] - x)**2) + (self.pos[1] - y)**2), x, y)
             if D > 0:
                    y = y + yi
@@ -91,8 +91,8 @@ class Robot:
             dx = -dx
         D = 2*dx - dy
         x = x0
-        for y in range (y0, y1):
-            if environment[x][y] == 1:
+        for y in range (y0.astype(np.int64), y1.astype(np.int64)):
+            if self.environment.grid[int(x)][int(y)] == 1:
                     return (math.sqrt(((self.pos[0] - x)**2) + (self.pos[1] - y)**2), x, y)
             if D > 0:
                    x = x + xi
