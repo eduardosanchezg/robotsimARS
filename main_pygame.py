@@ -1,9 +1,11 @@
+import math
+
 import pygame
 import pygame.locals
 import environment, robot
 
 
-environment = environment.Environment(1000,1000)
+environment = environment.Environment(500,500)
 robot = robot.Robot(environment,250,250,0.,50)
 
 pygame.init()
@@ -16,7 +18,7 @@ run = True
 
 while run:
 
-    pygame.time.delay(2000)
+    pygame.time.delay(100)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -29,7 +31,7 @@ while run:
             if event.key == pygame.K_o:
                 robot.accRight(1)
             if event.key == pygame.K_l:
-                robot.accRight(1)
+                robot.accRight(-1)
             if event.key == pygame.K_x:
                 robot.stop()
             if event.key == pygame.K_t:
@@ -41,5 +43,13 @@ while run:
 
     #next_simulation_step
     robot.time_step(1)
+    screen.fill((255,255,255))
+    for i in range(0,500):
+        for j in range(0,500):
+            if environment.grid[i][j] == 1:
+                pygame.draw.rect(screen,(0,0,0),[i,j,1,1],20)
     pygame.draw.circle(screen,(100,100,100), (int(robot.pos[0]),int(robot.pos[1])),robot.radius)
+    x = robot.pos[0] + math.cos(math.radians(robot.pos[2])) * robot.radius
+    y = robot.pos[1] + math.sin(math.radians(robot.pos[2])) * robot.radius
+    pygame.draw.line(screen,(0,255,255),(robot.pos[0],robot.pos[1]),(x,y),5)
     pygame.display.update()

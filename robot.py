@@ -7,6 +7,7 @@ class Robot:
     velocity = np.array([]) #len 2 vector
     environment = None
     pos = np.array([]) # vector saving position and orientation
+    sensors = None
 
     def __init__(self,environment, posX, posY, orientation, radius):
         self.environment = environment
