@@ -52,4 +52,21 @@ while run:
     x = robot.pos[0] + math.cos(math.radians(robot.pos[2])) * robot.radius
     y = robot.pos[1] + math.sin(math.radians(robot.pos[2])) * robot.radius
     pygame.draw.line(screen,(0,255,255),(robot.pos[0],robot.pos[1]),(x,y),5)
+
+    sprite = pygame.sprite.Sprite()
+
+
+    font = pygame.font.SysFont('Sans', 10)
+    sensor_labels = []
+    for i in range(0,12):
+        sensor_labels.append(font.render(str(int(robot.sensors[i][0])), True, (0, 150, 0)))
+        x = robot.pos[0] + math.cos(math.radians(robot.pos[2]+30*i)) * (robot.radius + 30)
+        y = robot.pos[1] + math.sin(math.radians(robot.pos[2]+30*i)) * (robot.radius + 30)
+        screen.blit(sensor_labels[i], (x, y))
+
+        x_ = robot.pos[0] + math.cos(math.radians(robot.pos[2] + 30 * i)) * (robot.radius)
+        y_ = robot.pos[1] + math.sin(math.radians(robot.pos[2] + 30 * i)) * (robot.radius)
+        pygame.draw.line(screen, (255, 0, 0), (x_, y_), (robot.sensors[i][1],robot.sensors[i][2]), 1)
+
+
     pygame.display.update()
