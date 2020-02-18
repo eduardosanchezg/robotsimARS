@@ -6,7 +6,7 @@ import environment, robot
 
 
 environment = environment.Environment(500,500)
-robot = robot.Robot(environment,250,250,0.,50)
+robot = robot.Robot(environment,250,-250,0.,50)
 
 pygame.init()
 pygame.display.set_caption("ARS Robot Simulation")
@@ -48,10 +48,11 @@ while run:
         for j in range(0,500):
             if environment.grid[i][j] == 1:
                 pygame.draw.rect(screen,(0,0,0),[i,j,1,1],20)
-    pygame.draw.circle(screen,(100,100,100), (int(robot.pos[0]),int(robot.pos[1])),robot.radius)
+    pygame.draw.circle(screen,(100,100,100), (int(robot.pos[0]),-int(robot.pos[1])),robot.radius)
     x = robot.pos[0] + math.cos(robot.pos[2]) * robot.radius
-    y = robot.pos[1] + math.sin(robot.pos[2]) * robot.radius
-    pygame.draw.line(screen,(0,255,255),(robot.pos[0],robot.pos[1]),(x,y),5)
+    y = -robot.pos[1] - math.sin(robot.pos[2]) * robot.radius
+    print("y",y)
+    pygame.draw.line(screen,(0,255,255),(robot.pos[0],-robot.pos[1]),(x,y),5)
 
     sprite = pygame.sprite.Sprite()
 

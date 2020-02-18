@@ -31,12 +31,15 @@ class Robot:
         print(self.pos)
         print(self.velocity)
         if self.velocity[0] == self.velocity[1]:
-            self.pos += (self.velocity[0] + self.velocity[1]) * np.array([np.cos(self.pos[2]), np.sin(self.pos[2]), 0])
+            self.pos += (self.velocity[0] + self.velocity[1]) * np.array([math.cos(self.pos[2]), math.sin(self.pos[2]), 0])
             return
         R = (self.radius) * (np.sum(self.velocity)) / (np.diff(self.velocity))
         w = np.diff(self.velocity)/(2 * self.radius)
-        transform = np.array([[np.cos(w*dt), -np.sin(w*dt), 0], [np.sin(w*dt), np.cos(w*dt), 0], [0,0,1]])
-        icc = np.array([self.pos[0] - R*np.sin(self.pos[2]), self.pos[1] + R*np.cos(self.pos[2]), 0])
+        transform = np.array([[math.cos(w*dt), -math.sin(w*dt), 0], 
+                              [math.sin(w*dt), math.cos(w*dt), 0], 
+                              [0,0,1]])
+        icc = np.array([self.pos[0] - R*math.sin(self.pos[2]), self.pos[1] + R*math.cos(self.pos[2]), 0])
+        print(icc)
         self.pos = np.dot(transform, (self.pos-icc))
         self.pos += icc + np.array([0,0,w*dt])
         self.refresh_sensors()
