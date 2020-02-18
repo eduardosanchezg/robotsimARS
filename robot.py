@@ -34,6 +34,7 @@ class Robot:
         print(self.velocity)
         if self.velocity[0] == self.velocity[1]:
             self.pos += (self.velocity[0] + self.velocity[1]) * np.array([math.cos(self.pos[2]), math.sin(self.pos[2]), 0])
+            self.refresh_sensors()
             return
         R = (self.radius) * (np.sum(self.velocity)) / (np.diff(self.velocity))
         w = np.diff(self.velocity)/(2 * self.radius)
@@ -59,16 +60,11 @@ class Robot:
     # CODE BASED ON BRESENHAM'S LINE ALGORITHM TO PLOT SENSOR LINE:
     # https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm#Algorithm
     def plotLine(self, x0, y0, x1, y1):
+        print("plotLine", x0, y0, x1, y1)
         if abs(y1 - y0) < abs(x1 - x0):
-            if x0 > x1:
-                return self.plotLineLow(x1, y1, x0, y0)
-            else:
-                return self.plotLineLow(x0, y0, x1, y1)
+            return self.plotLineLow(x0, y0, x1, y1)
         else:
-            if y0 > y1:
-                return self.plotLineHigh(x1, y1, x0, y0)
-            else:
-                return self.plotLineHigh(x0, y0, x1, y1)
+            return self.plotLineHigh(x0, y0, x1, y1)
 
     def plotLineLow(self, x0, y0, x1, y1):
         dx = x1 - x0
