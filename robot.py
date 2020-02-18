@@ -27,6 +27,8 @@ class Robot:
     def stop(self):
         self.velocity = np.array([0,0])
 
+    # @author: Tobias Bauer
+    # Calculate movement of the robot in dt timesteps
     def time_step(self, dt):
         print(self.pos)
         print(self.velocity)
@@ -46,8 +48,8 @@ class Robot:
     
     def refresh_sensors(self):
         for i in range(12):
-            x = self.max_sensor_range * np.cos(self.pos[2] + i*30) + self.pos[0]
-            y = self.max_sensor_range * np.sin(self.pos[2] + i*30) + self.pos[1]
+            x = self.max_sensor_range * np.cos(self.pos[2] + (math.pi/6.) * i) + self.pos[0]
+            y = self.max_sensor_range * np.sin(self.pos[2] + (math.pi/6.) * i) + self.pos[1]
             sensor_data = self.plotLine(self.pos[0], self.pos[1], x, y)
             self.sensors[i][0] = sensor_data[0] - self.radius # range
             self.sensors[i][1] = sensor_data[1] # x
