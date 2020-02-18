@@ -47,7 +47,7 @@ while run:
     for i in range(0,500):
         for j in range(0,500):
             if environment.grid[i][j] == 1:
-                pygame.draw.rect(screen,(0,0,0),[i,j,1,1],20)
+                pygame.draw.rect(screen,(0,0,0),[i,j,1,1],1)
     pygame.draw.circle(screen,(100,100,100), (int(robot.pos[0]),-int(robot.pos[1])),robot.radius)
     x = robot.pos[0] + math.cos(robot.pos[2]) * robot.radius
     y = -robot.pos[1] - math.sin(robot.pos[2]) * robot.radius
