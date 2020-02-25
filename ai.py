@@ -1,4 +1,5 @@
 import environment
+import numpy as np
 
 # NOTE FOR MY BOYS (to be deleted):
 # When the robot goes over any (environment[x][y] == 0) we should convert
@@ -20,3 +21,13 @@ def fitness(environment):
                 non_obstacles += 1
 
     return covered_count / non_obstacles
+
+
+# NOTE: WEIGHTS FOR Δt ARE NOT IMPLEMENTED YET!!!
+#       CURRENTLY WORKS FOR A NN WITH 12 INPUTS AND 2 OUTPUTS (NO HIDDEN LAYER)
+#       This will be changed as soon as the NN is ready.
+
+# @author: Paco Francés
+def generate_genome():
+    w1 = np.random.random_sample((12,2))
+    return w1
