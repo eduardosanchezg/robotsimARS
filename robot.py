@@ -14,8 +14,7 @@ class Robot:
         self.pos = np.array([posX, posY, orientation])
         self.radius = radius
         self.velocity = np.array([0, 0])
-        # Sensor format: [range, x, y]
-        self.sensors = np.zeros((12, 3))
+        self.sensors = np.zeros((12, 3)) # Sensor format: [range, x, y]
         self.refresh_sensors()
 
     def accLeft(self, dl):
@@ -47,6 +46,7 @@ class Robot:
         self.pos += icc + np.array([0,0,w*dt])
         self.refresh_sensors()
     
+    # @author: Paco Francés
     def refresh_sensors(self):
         for i in range(12):
             x = self.max_sensor_range * np.cos(self.pos[2] + (math.pi/6.) * i) + self.pos[0]
