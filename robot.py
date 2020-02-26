@@ -8,6 +8,8 @@ class Robot:
     environment = None
     pos = np.array([]) # vector saving position and orientation
     sensors = None
+    fitness = 0
+    genome = []
 
     def __init__(self,environment, posX, posY, orientation, radius):
         self.environment = environment
