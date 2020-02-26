@@ -14,15 +14,15 @@ mutation_max_change = 0.1
 # colision or when the time limit is reached.
 
 # @author: Paco Francés
-def fitness(environment):
+def fitness(robot):
     covered_count = 0
     non_obstacles = 0
-    for i in range(environment.dimx):
-        for j in range(environment.dimy):
-            if (environment[i][j] == 2):
+    for i in range(robot.environment.dimx):
+        for j in range(robot.environment.dimy):
+            if (robot.environment[i][j] == 2):
                 covered_count += 1
                 non_obstacles += 1
-            elif (environment[i][j] == 0):
+            elif (robot.environment[i][j] == 0):
                 non_obstacles += 1
     return covered_count / non_obstacles
 
