@@ -4,13 +4,16 @@ import pygame
 import pygame.locals
 import environment, robot
 
+env_width = 2000
+env_height = 1000
 
-environment = environment.Environment(500,500)
-robot = robot.Robot(environment,250,-250,0.,50)
+environment = environment.Environment(env_width, env_height)
+environment.add_line(500, -500, 500, -1000)
+robot = robot.Robot(environment,250,-250,0.,25)
 
 pygame.init()
 pygame.display.set_caption("ARS Robot Simulation")
-screen = pygame.display.set_mode((500,500))
+screen = pygame.display.set_mode((env_width, env_height))
 screen.fill((255, 255, 255))
 
 run = True
@@ -18,7 +21,7 @@ run = True
 
 while run:
 
-    pygame.time.delay(100)
+    pygame.time.delay(10)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -44,16 +47,16 @@ while run:
     #next_simulation_step
     robot.time_step(1)
     screen.fill((255,255,255))
-    for i in range(0,500):
-        for j in range(0,500):
-            if environment.grid[i][j] == 1:
-                pygame.draw.rect(screen,(0,0,0),[i,j,1,1],1)
+    # for i in range(0, env_height):
+    #     for j in range(0, env_height):
+    #         if environment.grid[i][j] == 1:
+    #             pygame.draw.rect(screen,(0,0,0),[i,j,1,1],0)
+    for line in environment.lines:
+        pygame.draw.line(screen, (0,0,0), (line[0], -line[1]), (line[2], -line[3]))
     pygame.draw.circle(screen,(100,100,100), (int(robot.pos[0]),-int(robot.pos[1])),robot.radius)
     x = robot.pos[0] + math.cos(robot.pos[2]) * robot.radius
     y = -robot.pos[1] - math.sin(robot.pos[2]) * robot.radius
     pygame.draw.line(screen,(0,255,255),(robot.pos[0],-robot.pos[1]),(x,y),5)
-
-    sprite = pygame.sprite.Sprite()
 
 
     font = pygame.font.SysFont('Sans', 10)
