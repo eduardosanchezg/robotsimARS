@@ -8,6 +8,8 @@ class Robot:
     environment = None
     pos = np.array([]) # vector saving position and orientation
     sensors = None
+    fitness = 0
+    genome = []
 
     def __init__(self,environment, posX, posY, orientation, radius):
         self.environment = environment
@@ -77,6 +79,7 @@ class Robot:
         return len(collisions) > 0, collisions
 
     
+    # @author: Paco Francés
     def refresh_sensors(self):
         for i in range(12):
             x = self.max_sensor_range * np.cos(self.pos[2] + (math.pi/6.) * i) + self.pos[0]
