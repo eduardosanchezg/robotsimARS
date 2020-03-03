@@ -2,10 +2,14 @@
 
 class Environment:
     grid = [] #binary 2d array
+    dimx = 0
+    dimy = 0
 
     def __init__(self, dimx, dimy):
         self.lines = []
         self.grid = [[0 for y in range(dimy)] for x in range(dimx)]
+        self.dimx = dimx
+        self.dimy = dimy
         self.add_line(0,0,dimx-1,0)
         self.add_line(0,0,0,-dimy+1)
         self.add_line(dimx-1,0,dimx-1,-dimy+1)
