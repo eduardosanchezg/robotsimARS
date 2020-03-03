@@ -4,24 +4,17 @@ class Environment:
     grid = [] #binary 2d array
 
     def __init__(self, dimx, dimy):
+        self.dimx = dimx
+        self.dimy = dimy
         self.lines = []
         self.grid = [[0 for y in range(dimy)] for x in range(dimx)]
         self.add_line(0,0,dimx-1,0)
         self.add_line(0,0,0,-dimy+1)
         self.add_line(dimx-1,0,dimx-1,-dimy+1)
         self.add_line(0,-dimy+1,dimx-1,-dimy+1)
-        # for i in range(0, dimx):
-        #     for j in range(0, dimy):
-        #         new.append(0)
-        #     self.grid.append(new)
-        #     new = []
-
-        # for i in range(0, dimx):
-        #     for j in range(0, dimy):
-        #         if i == 0 or j == 0 or i == dimx-1 or j == dimy-1:
-        #             self.grid[i][j] = 1
 
 
+    # @author: Tobias Bauer
     def add_line(self, x0, y0, x1, y1):
         self.lines.append([x0,y0,x1,y1])
         if abs(y1 - y0) < abs(x1 - x0):
@@ -49,7 +42,6 @@ class Environment:
             if x < 0 or x > len(self.grid) or y < 0 or y > -len(self.grid):
                 pass
             else:
-                print(x,y)
                 self.grid[x][y] = 1
             if D > 0:
                    y = y + yi
@@ -69,7 +61,6 @@ class Environment:
             if x < 0 or x > len(self.grid) or y < 0 or y > len(self.grid):
                 pass
             else:
-                print(x,y)
                 self.grid[x][y] = 1
             if D > 0:
                    x = x + xi

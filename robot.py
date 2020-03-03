@@ -32,7 +32,6 @@ class Robot:
     # @author: Tobias Bauer
     # Calculate movement of the robot in dt timesteps
     def time_step(self, dt):
-        print(self.pos)
         collision_points = self.check_for_collision()
         if self.velocity[0] == self.velocity[1]:
             v = (self.velocity[0]) * np.array([math.cos(self.pos[2]), math.sin(self.pos[2]), 0])
@@ -51,11 +50,45 @@ class Robot:
             if np.dot(v, np.append(collision_point[0],0)) >= 0:
                 v1 = np.append(collision_point[1],0)
                 v = np.dot(v,v1) / np.dot(v1,v1) * v1
-        print(self.pos)
-        print(v)
+        if not collision_points[0] and self.check_for_collision_moving(v):
+            print(self.pos)
+            return
         self.pos += v
         self.refresh_sensors()
 
+    def check_for_collision_moving(self, M):
+        print("check", self.pos, M)
+        Q = self.pos[:2]
+        r = float(self.radius)
+        M = M[:2]
+        collisions = []
+        for line in self.environment.lines:
+            P1 = np.array(line[:2])
+            V = np.array(line[2:]) - P1
+            # generate orthogonal vector O
+            O = np.random.randn(2) 
+            O -= O.dot(V)/(np.linalg.norm(V))**2 * V
+            O /= np.linalg.norm(O)
+            if np.dot(O, M) < 1e-3: # line is parallel to movement
+                continue
+            b1 = Q - P1 - r * O
+            b2 = Q - P1 + r * O
+            a = np.concatenate(([-M], [V])).T
+            x1 = np.linalg.solve(a, b1)
+            x2 = np.linalg.solve(a, b2)
+            if (x1 >= 0).all() and (x1 <= 1).all():
+                print("Collision")
+                print(x1)
+                return True
+            if (x2 >= 0).all() and (x2 <= 1).all():
+                print("Collision")
+                print(x2)
+                return True
+        print("no Collision")
+        return False
+
+
+    # @author: Tobias Bauer
     def check_for_collision(self):
         Q = self.pos[:2]
         r = float(self.radius)
@@ -119,7 +152,7 @@ class Robot:
         D = 2*dy - dx
         y = y0
         for x in range (int(x0), int(x1)):
-            if x < 0 or x >= len(self.environment.grid) or y > 0 or y <= -len(self.environment.grid):
+            if x < 0 or x >= self.environment.dimx or y > 0 or y <= -self.environment.dimy:
                 pass
             elif self.environment.grid[int(x)][-int(y)] == 1:
                 return (math.sqrt(((self.pos[0] - x)**2) + (self.pos[1] - y)**2), x, y)
@@ -139,7 +172,7 @@ class Robot:
         D = 2*dx - dy
         x = x0
         for y in range (int(y0), int(y1)):
-            if x < 0 or x >= len(self.environment.grid) or y > 0 or y <= -len(self.environment.grid):
+            if x < 0 or x >= self.environment.dimx or y > 0 or y <= -self.environment.dimy:
                 pass
             elif self.environment.grid[int(x)][-int(y)] == 1:
                     return (math.sqrt(((self.pos[0] - x)**2) + (self.pos[1] - y)**2), x, y)
