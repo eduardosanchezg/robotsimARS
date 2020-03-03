@@ -68,7 +68,7 @@ def crossover_pair(parent1, parent2):
 
 # @author: Paco Francés
 def mutate(genome_list):
-    for i in range(len(robot_list)):
+    for i in range(len(genome_list)):
         genome_list[i] = mutate_single(genome_list[i])
     return genome_list
 
