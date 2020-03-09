@@ -13,7 +13,7 @@ env_height = 1000
 class Genome:
 
     def __init__(self):
-        self.weights = np.random.randn(24,1)
+        self.weights = generate_genome(56)
         self.environment = environment.Environment(env_width, env_height)
         self.environment.add_line(500, -500, 500, -700)
         self.environment.add_line(500, -700, 700, -700)
@@ -29,6 +29,27 @@ class Genome:
         self.environment.reset()
         self.robot.reset()
     
+
+
+class NN:
+    def __init__(self, genome):
+        self.input = np.zeros(12)
+        self.hidden = np.zeros(4)
+        self.output = np.zeros(2)
+        self.w1 = np.zeros((self.input.size, self.hidden.size))
+        self.w2 = np.zeros((self.hidden.size, self.output.size))
+
+        # Assign genome to weights
+        iterator = 0
+        for i in range (self.input.size):
+            for j in range(self.hidden.size):
+                self.w1[i][j] = genome.weights[iterator]
+                iterator += 1
+
+        for i in range(self.hidden.size):
+            for j in range(self.output.size):
+                self.w2[i][j] = genome.weights[iterator]
+                iterator += 1
 
 
 # NOTE FOR MY BOYS (to be deleted):
@@ -49,19 +70,20 @@ def fitness(genome):
                 non_obstacles += 1
             elif (environment.grid[i][j] == 0):
                 non_obstacles += 1
-    print("Fitness: ", covered_count, non_obstacles)
+    print("Fitness: ", covered_count / non_obstacles)
     return covered_count / non_obstacles
 
 
 # NOTE: WEIGHTS FOR Δt ARE NOT IMPLEMENTED YET!!!
-#       CURRENTLY WORKS FOR A NN WITH 12 INPUTS AND 2 OUTPUTS (NO HIDDEN LAYER)
+#       CURRENTLY WORKS FOR A NN WITH 12 INPUTS AND 2 OUTPUTS (1 HIDDEN LAYER; 4 NODES)
 #       This will be changed as soon as the NN is ready.
-#       12 * 2 = 24 (Could be changed to read size of NN)       
+#       12 * 4 = 48 (Could be changed to read size of NN)
+#       + 4 * 2 = 56       
 #       In array form due to simplicity during crossover
 
 # @author: Paco Francés
-def generate_genome():
-    genome = np.random.randn(24,1)
+def generate_genome(size):
+    genome = np.random.randn(size,1)
     return genome
 
 # List will be double the size to maintain the same population size
