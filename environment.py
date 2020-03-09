@@ -5,18 +5,63 @@ class Environment:
     dimx = 0
     dimy = 0
 
-    def __init__(self, dimx, dimy):
+    def __init__(self, dimx, dimy, room="rect"):
         self.lines = []
         self.grid = [[0 for y in range(dimy)] for x in range(dimx)]
         self.dimx = dimx
         self.dimy = dimy
-        self.add_line(0,0,dimx-1,0)
-        self.add_line(0,0,0,-dimy+1)
-        self.add_line(dimx-1,0,dimx-1,-dimy+1)
-        self.add_line(0,-dimy+1,dimx-1,-dimy+1)
+        if room == "rect":
+            self.add_line(0,0,dimx-1,0)
+            self.add_line(0,0,0,dimy-1)
+            self.add_line(dimx-1,0,dimx-1,dimy-1)
+            self.add_line(0,dimy-1,dimx-1,dimy-1)
+        elif room == "trapezoid":
+            self.add_line(0, 0, dimx - 1, 0)
+            self.add_line(0, 0, dimx/3 - 1, dimy - 1)
+            self.add_line(dimx - 1, 0, 2*dimx/3 - 1, dimy - 1)
+            self.add_line(dimx/3 - 1, dimy - 1, 2*dimx/3 - 1, dimy - 1)
+        elif room == "double_rect":
+            self.add_line(0, 0, dimx - 1, 0)
+            self.add_line(0, 0, 0, dimy - 1)
+            self.add_line(dimx - 1, 0, dimx - 1, dimy - 1)
+            self.add_line(0, dimy - 1, dimx - 1, dimy - 1)
 
-    def __init__(self,dimx, dimy, grid):
-        pass
+            self.add_line(dimx/4-1, dimy/4-1, 3*dimx/4 - 1, dimy/4-1)
+            self.add_line(dimx/4-1, dimy/4-1, dimx/4-1, 3*dimy/4-1)
+            self.add_line(3*dimx/4-1, dimy/4-1, 3*dimx/4-1, 3*dimy/4-1)
+            self.add_line(dimx/4-1, 3*dimy/4-1, 3*dimx/4 - 1, 3*dimy/4 - 1)
+        elif room == "double_trapezoid":
+            self.add_line(0, 0, dimx - 1, 0)
+            self.add_line(0, 0, dimx / 3 - 1, dimy - 1)
+            self.add_line(dimx - 1, 0, 2 * dimx / 3 - 1, dimy - 1)
+            self.add_line(dimx / 3 - 1, dimy - 1, 2 * dimx / 3 - 1, dimy - 1)
+
+            self.add_line(dimx/4-1, dimy/4-1, 3*dimx/4 - 1, dimy/4-1)
+            self.add_line(dimx/4-1, dimy/4-1, dimx / 3 - 1 + dimx/4, 3*dimy/4 - 1)
+            self.add_line(3*dimx/4 - 1, dimy/4 - 1, 2 * dimx / 3 - 1 - dimx/4, 3*dimy/4 - 1)
+            self.add_line(dimx / 3 - 1 + dimx/4, 3*dimy/4 - 1, 2 * dimx / 3 - 1 -dimx/4, 3*dimy/4 - 1)
+
+        elif room == "house":
+            self.add_line(0, 0, dimx - 1, 0)
+            self.add_line(0, 0, 0, dimy - 1)
+            self.add_line(dimx - 1, 0, dimx - 1, dimy - 1)
+            self.add_line(0, dimy - 1, dimx - 1, dimy - 1)
+
+            self.add_line(2*dimx/10,2*dimy/10,2*dimx/10,4*dimy/10)
+            self.add_line(2*dimx/10,2*dimy/10,4*dimx/10,2*dimy/10)
+            self.add_line(4*dimx/10,2*dimy/10,4*dimx/10,4*dimy/10)
+            self.add_line(4*dimx/10,4*dimy/10,2*dimx/10,4*dimy/10)
+            
+            self.add_line(7*dimx/10,0,7*dimx/10,5*dimy/10)
+            self.add_line(7*dimx/10,5*dimy/10, 8*dimx/10,5*dimy/10)
+            self.add_line(8 * dimx / 10, 0, 8 * dimx / 10, 5 * dimy / 10)
+
+            self.add_line(7 * dimx / 10, 7 * dimy / 10, 7 * dimx / 10, 9 * dimy / 10)
+            self.add_line(7 * dimx / 10, 7 * dimy / 10, 9 * dimx / 10, 7 * dimy / 10)
+            self.add_line(9 * dimx / 10, 7 * dimy / 10, 9 * dimx / 10, 9 * dimy / 10)
+            self.add_line(9 * dimx / 10, 9 * dimy / 10, 7 * dimx / 10, 9 * dimy / 10)
+
+
 
     def reset(self):
         for x in range(self.dimx):
@@ -32,8 +77,8 @@ class Environment:
 
     # @author: Tobias Bauer
     def add_line(self, x0, y0, x1, y1):
-        self.lines.append([x0,y0,x1,y1])
-        self.plot_line(x0, -y0, x1, -y1)
+        self.lines.append([x0,-y0,x1,-y1])
+        self.plot_line(x0, y0, x1, y1)
         
     def plot_line(self, x0, y0, x1, y1):
         if abs(y1 - y0) < abs(x1 - x0):
