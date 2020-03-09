@@ -1,6 +1,8 @@
 import random
 import numpy as np
 import environment, robot
+from PIL import Image
+import numpy as np
 
 population_size = 10
 generations = 50
@@ -10,11 +12,31 @@ mutation_max_change = 0.1
 env_width = 1000
 env_height = 1000
 
+
+
+
+def import_grid(file):
+    image = Image.open(file)
+    data = [image.getpixel((x, y)) for x in range(image.width) for y in range(image.height)]
+    grid = []
+    n = 0
+    for i in range(0,image.width):
+        line = []
+        for j in range(0,image.height):
+            if data[n][0] == 255:
+                line.append(0)
+            else:
+                line.append(1)
+            n=n+1
+        grid.append(line)
+    return grid
+
 class Genome:
 
     def __init__(self):
         self.weights = generate_genome(56)
-        self.environment = environment.Environment(env_width, env_height)
+        grid = import_grid("untitled.bmp")
+        self.environment = environment.Environment(env_width, env_height, grid)
         self.environment.add_line(500, -500, 500, -700)
         self.environment.add_line(500, -700, 700, -700)
         self.environment.add_line(700, -700, 700, -500)

@@ -15,6 +15,9 @@ class Environment:
         self.add_line(dimx-1,0,dimx-1,-dimy+1)
         self.add_line(0,-dimy+1,dimx-1,-dimy+1)
 
+    def __init__(self,dimx, dimy, grid):
+        pass
+
     def reset(self):
         for x in range(self.dimx):
             for y in range(self.dimy):
