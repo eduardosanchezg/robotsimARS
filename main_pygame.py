@@ -17,7 +17,6 @@ env_height = 800
 # environment.add_line(300, -350, 500, -350)
 # environment.add_line(500, -350, 400, -200)
 # robot = robot.Robot(environment,250,-250,0.,25)
-# nn = nn.NN()
 genome = ea.do_ea()
 robot = genome.robot
 environment = genome.environment

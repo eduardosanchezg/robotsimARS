@@ -31,6 +31,7 @@ def do_ea():
             for t in range(time_steps):
                 ai.time_step(genome)
                 robot.time_step(1)
+                if 0 in robot.sensors.T[0]: break
 
         genome_list = ai.select(genome_list)
 

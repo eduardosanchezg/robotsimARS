@@ -6,8 +6,6 @@ class Environment:
     dimy = 0
 
     def __init__(self, dimx, dimy):
-        self.dimx = dimx
-        self.dimy = dimy
         self.lines = []
         self.grid = [[0 for y in range(dimy)] for x in range(dimx)]
         self.dimx = dimx

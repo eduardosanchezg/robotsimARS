@@ -24,6 +24,7 @@ class Genome:
         self.environment.add_line(300, -350, 500, -350)
         self.environment.add_line(500, -350, 400, -200)
         self.robot = robot.Robot(self.environment, 250, -250, 0., 60)
+        self.nn = NN(self)
 
     def reset(self):
         self.environment.reset()
@@ -31,6 +32,7 @@ class Genome:
     
 
 
+# @author: Paco Francés
 class NN:
     def __init__(self, genome):
         self.input = np.zeros(12)
@@ -139,11 +141,16 @@ def mutate_single(genome):
 def select(genome_list):
     genome_list.sort(key=fitness, reverse=True)
     return genome_list[:int(population_size/2)]
-    
+
+# This is the NN's feedforward
+# @author: Tobias Bauer & Paco Francés
 def time_step(genome):
     robot = genome.robot
-    weights = np.reshape(genome.weights, (2,12))
-    tmp = weights.dot(robot.sensors.T[0])
-    moves = np.tanh(tmp)
-    genome.robot.accLeft(moves[0])
-    genome.robot.accRight(moves[1])
+    #weights = np.reshape(genome.weights, (2,12))
+    #tmp = weights.dot(robot.sensors.T[0])
+    #moves = np.tanh(tmp)
+    genome.nn.hidden = np.tanh(np.dot(genome.nn.input, genome.nn.w1))
+    genome.nn.output = np.tanh(np.dot(genome.nn.hidden, genome.nn.w2))
+    genome.nn.input = genome.robot.sensors.T[0]
+    genome.robot.accLeft(genome.nn.output[0])
+    genome.robot.accRight(genome.nn.output[1])
