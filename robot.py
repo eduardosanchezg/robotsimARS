@@ -20,6 +20,11 @@ class Robot:
         self.sensors = np.zeros((12, 3))
         self.refresh_sensors()
 
+    def reset(self):
+        self.velocity = np.array([0., 0.])
+        self.sensors = np.zeros((12, 3))
+        self.pos = np.array([250, -250, 0.])
+
     def accLeft(self, dl):
         self.velocity[0] += dl
 
@@ -32,6 +37,7 @@ class Robot:
     # @author: Tobias Bauer
     # Calculate movement of the robot in dt timesteps
     def time_step(self, dt):
+        self.environment.grid[int(self.pos[0])][int(self.pos[1])] = 2
         collision_points = self.check_for_collision()
         if self.velocity[0] == self.velocity[1]:
             v = (self.velocity[0]) * np.array([math.cos(self.pos[2]), math.sin(self.pos[2]), 0])
@@ -51,13 +57,12 @@ class Robot:
                 v1 = np.append(collision_point[1],0)
                 v = np.dot(v,v1) / np.dot(v1,v1) * v1
         if not collision_points[0] and self.check_for_collision_moving(v):
-            print(self.pos)
             return
         self.pos += v
         self.refresh_sensors()
 
     def check_for_collision_moving(self, M):
-        print("check", self.pos, M)
+        #print("check", self.pos, M)
         Q = self.pos[:2]
         r = float(self.radius)
         M = M[:2]
@@ -77,14 +82,14 @@ class Robot:
             x1 = np.linalg.solve(a, b1)
             x2 = np.linalg.solve(a, b2)
             if (x1 >= 0).all() and (x1 <= 1).all():
-                print("Collision")
-                print(x1)
+                #print("Collision")
+                #print(x1)
                 return True
             if (x2 >= 0).all() and (x2 <= 1).all():
-                print("Collision")
-                print(x2)
+                #print("Collision")
+                #print(x2)
                 return True
-        print("no Collision")
+        #print("no Collision")
         return False
 
 

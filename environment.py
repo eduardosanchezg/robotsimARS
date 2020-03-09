@@ -17,10 +17,24 @@ class Environment:
         self.add_line(dimx-1,0,dimx-1,-dimy+1)
         self.add_line(0,-dimy+1,dimx-1,-dimy+1)
 
+    def reset(self):
+        for x in range(self.dimx):
+            for y in range(self.dimy):
+                self.grid[x][y] = 0
+        for line in self.lines:
+            x0 = line[0]
+            y0 = line[1]
+            x1 = line[2]
+            y1 = line[3]
+            self.plot_line(x0, -y0, x1, -y1)
+
 
     # @author: Tobias Bauer
     def add_line(self, x0, y0, x1, y1):
         self.lines.append([x0,y0,x1,y1])
+        self.plot_line(x0, -y0, x1, -y1)
+        
+    def plot_line(self, x0, y0, x1, y1):
         if abs(y1 - y0) < abs(x1 - x0):
             if x0 > x1:
                 return self.plotLineLow(x1, y1, x0, y0)
@@ -43,7 +57,7 @@ class Environment:
         D = 2*dy - dx
         y = y0
         for x in range (int(x0), int(x1)):
-            if x < 0 or x > len(self.grid) or y < 0 or y > -len(self.grid):
+            if x < 0 or x > len(self.grid) or y < 0 or y > len(self.grid):
                 pass
             else:
                 self.grid[x][y] = 1

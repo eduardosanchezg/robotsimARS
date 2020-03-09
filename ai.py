@@ -2,10 +2,34 @@ import random
 import numpy as np
 import environment, robot
 
-population_size = 50
+population_size = 10
 generations = 50
 mutation_prob = 0.1
 mutation_max_change = 0.1
+
+env_width = 1000
+env_height = 1000
+
+class Genome:
+
+    def __init__(self):
+        self.weights = np.random.randn(24,1)
+        self.environment = environment.Environment(env_width, env_height)
+        self.environment.add_line(500, -500, 500, -700)
+        self.environment.add_line(500, -700, 700, -700)
+        self.environment.add_line(700, -700, 700, -500)
+        self.environment.add_line(700, -500, 500, -500)
+
+        self.environment.add_line(400, -200, 300, -350)
+        self.environment.add_line(300, -350, 500, -350)
+        self.environment.add_line(500, -350, 400, -200)
+        self.robot = robot.Robot(self.environment, 250, -250, 0., 60)
+
+    def reset(self):
+        self.environment.reset()
+        self.robot.reset()
+    
+
 
 # NOTE FOR MY BOYS (to be deleted):
 # When the robot goes over any (environment[x][y] == 0) we should convert
@@ -14,16 +38,18 @@ mutation_max_change = 0.1
 # colision or when the time limit is reached.
 
 # @author: Paco Francés
-def fitness(robot):
+def fitness(genome):
+    environment = genome.environment
     covered_count = 0
     non_obstacles = 0
-    for i in range(robot.environment.dimx):
-        for j in range(robot.environment.dimy):
-            if (robot.environment[i][j] == 2):
+    for i in range(environment.dimx):
+        for j in range(environment.dimy):
+            if (environment.grid[i][j] == 2):
                 covered_count += 1
                 non_obstacles += 1
-            elif (robot.environment[i][j] == 0):
+            elif (environment.grid[i][j] == 0):
                 non_obstacles += 1
+    print("Fitness: ", covered_count, non_obstacles)
     return covered_count / non_obstacles
 
 
@@ -35,7 +61,7 @@ def fitness(robot):
 
 # @author: Paco Francés
 def generate_genome():
-    genome = np.random.random_sample((24,))
+    genome = np.random.randn(24,1)
     return genome
 
 # List will be double the size to maintain the same population size
@@ -55,16 +81,22 @@ def crossover(genome_list):
 # Single-point crossover
 # @author: Paco Francés
 def crossover_pair(parent1, parent2):
-    point = random.randint(1, parent1.size)
-    child1 = np.zeros(parent1.size)
-    child2 = np.zeros(parent1.size)
+    weights1 = parent1.weights
+    weights2 = parent2.weights
+    point = random.randint(1, weights1.size)
+    child1 = np.zeros(weights1.size)
+    child2 = np.zeros(weights1.size)
     for i in range(point):
-        child1[i] = parent1[i]
-        child2[i] = parent2[i]
-    for i in range(point, parent1.size):
-        child1[i] = parent2[i]
-        child2[i] = parent1[i]
-    return (child1, child2)
+        child1[i] = weights1[i]
+        child2[i] = weights2[i]
+    for i in range(point, weights1.size):
+        child1[i] = weights2[i]
+        child2[i] = weights1[i]
+    genome1 = Genome()
+    genome1.weights = child1
+    genome2 = Genome()
+    genome2.weights = child2
+    return (genome1, genome2)
 
 # @author: Paco Francés
 def mutate(genome_list):
@@ -74,13 +106,22 @@ def mutate(genome_list):
 
 # @author: Paco Francés
 def mutate_single(genome):
-    for i in range(genome.size):
+    weights = genome.weights
+    for i in range(weights.size):
         if (random.random() <= mutation_prob):
-            genome[i] += random.uniform(-mutation_max_change, mutation_max_change)
+            weights[i] += random.uniform(-mutation_max_change, mutation_max_change)
     return genome
 
 # Select top 50% of individuals for crossover (truncation selection)
 # @author: Paco Francés
-def select(robot_list):
-    robot_list.sort(key=attrgetter('fitness'), reverse=True)
-    return robot_list[:population_size/2]
+def select(genome_list):
+    genome_list.sort(key=fitness, reverse=True)
+    return genome_list[:int(population_size/2)]
+    
+def time_step(genome):
+    robot = genome.robot
+    weights = np.reshape(genome.weights, (2,12))
+    tmp = weights.dot(robot.sensors.T[0])
+    moves = np.tanh(tmp)
+    genome.robot.accLeft(moves[0])
+    genome.robot.accRight(moves[1])
