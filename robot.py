@@ -37,6 +37,8 @@ class Robot:
     # @author: Tobias Bauer
     # Calculate movement of the robot in dt timesteps
     def time_step(self, dt):
+        # print("Position:", self.pos)
+        # print("Velocity", self.velocity)
         self.environment.grid[int(self.pos[0])][int(self.pos[1])] = 2
         collision_points = self.check_for_collision()
         if self.velocity[0] == self.velocity[1]:
@@ -52,15 +54,23 @@ class Robot:
             pos_new += icc + np.array([0,0,w*dt])
             v = pos_new - self.pos
 
-        for collision_point in collision_points[1]:
+        if collision_points[0] and len(collision_points[1]) > 1:
+            if np.dot(v, np.append(collision_points[1][0][0],0)) >= 0 and np.dot(v, np.append(collision_points[1][1][0],0)) >= 0:
+                v = np.array([0,0,0])
+        elif len(collision_points[1]) == 1:
+            collision_point = collision_points[1][0]
             if np.dot(v, np.append(collision_point[0],0)) >= 0:
                 v1 = np.append(collision_point[1],0)
                 v = np.dot(v,v1) / np.dot(v1,v1) * v1
+
         if not collision_points[0] and self.check_for_collision_moving(v):
+            print("Stop robot!!")
             return
         self.pos += v
         self.refresh_sensors()
+        return collision_points[0]
 
+    # @author: Tobias Bauer
     def check_for_collision_moving(self, M):
         #print("check", self.pos, M)
         Q = self.pos[:2]
@@ -82,12 +92,14 @@ class Robot:
             x1 = np.linalg.solve(a, b1)
             x2 = np.linalg.solve(a, b2)
             if (x1 >= 0).all() and (x1 <= 1).all():
-                #print("Collision")
-                #print(x1)
+                print("Collision")
+                print(self.pos)
+                print(x1)
                 return True
             if (x2 >= 0).all() and (x2 <= 1).all():
-                #print("Collision")
-                #print(x2)
+                print("Collision")
+                print(self.pos)
+                print(x2)
                 return True
         #print("no Collision")
         return False
@@ -133,19 +145,42 @@ class Robot:
                 self.sensors[i][2] = sensor_data[2] # y
 
 
-    # CODE BASED ON BRESENHAM'S LINE ALGORITHM TO PLOT SENSOR LINE:
-    # https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm#Algorithm
+    # author: Tobias Bauer
     def plotLine(self, x0, y0, x1, y1):
-        if abs(y1 - y0) < abs(x1 - x0):
-            if x0 > x1:
-                return self.plotLineLow(x1, y1, x0, y0)
-            else:
-                return self.plotLineLow(x0, y0, x1, y1)
-        else:
-            if y0 > y1:
-                return self.plotLineHigh(x1, y1, x0, y0)
-            else:
-                return self.plotLineHigh(x0, y0, x1, y1)
+        end_point = None
+        for line in self.environment.lines:
+            A1 = np.array(line[:2])
+            A2 = np.array(line[2:])
+            dA = A2 - A1
+            B1 = np.array([x0,y0]) 
+            B2 = np.array([x1,y1])
+            dB = B2 - B1
+            dP = A1 - B1
+            dap = np.empty_like(dA)
+            dap[0] = -dA[1]
+            dap[1] = dA[0]
+            denom = np.dot( dap, dB)
+            num = np.dot( dap, dP )
+            if denom == 0.:
+                continue
+            s = (num / denom.astype(float))
+            if s < 0 or s > 1:
+                continue
+            col = s * dB + B1
+            if end_point is None or np.linalg.norm(s*dB) < end_point[0]:
+                end_point = (np.linalg.norm(s*dB), col[0], col[1])
+        return end_point
+
+        # if abs(y1 - y0) < abs(x1 - x0):
+        #     if x0 > x1:
+        #         return self.plotLineLow(x1, y1, x0, y0)
+        #     else:
+        #         return self.plotLineLow(x0, y0, x1, y1)
+        # else:
+        #     if y0 > y1:
+        #         return self.plotLineHigh(x1, y1, x0, y0)
+        #     else:
+        #         return self.plotLineHigh(x0, y0, x1, y1)
 
     def plotLineLow(self, x0, y0, x1, y1):
         dx = x1 - x0

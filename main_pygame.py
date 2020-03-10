@@ -7,19 +7,11 @@ import environment, robot, ea, ai
 env_width = 1000
 env_height = 800
 
-# environment = environment.Environment(env_width, env_height)
-# environment.add_line(500, -500, 500, -700)
-# environment.add_line(500, -700, 700, -700)
-# environment.add_line(700, -700, 700, -500)
-# environment.add_line(700, -500, 500, -500)
-
-# environment.add_line(400, -200, 300, -350)
-# environment.add_line(300, -350, 500, -350)
-# environment.add_line(500, -350, 400, -200)
-# robot = robot.Robot(environment,250,-250,0.,25)
-genome = ea.do_ea()
-robot = genome.robot
-environment = genome.environment
+environment = environment.Environment(env_width, env_height, "trapezoid")
+robot = robot.Robot(environment,250,-250,0.,25)
+# genome = ea.do_ea()
+# robot = genome.robot
+# environment = genome.environment
 
 pygame.init()
 pygame.display.set_caption("ARS Robot Simulation")
@@ -55,7 +47,7 @@ while run:
                 robot.accRight(-1)
 
     #next_simulation_step
-    ai.time_step(genome)
+    #ai.time_step(genome)
     #robot.accLeft(moves[0])
     #robot.accLeft(moves[1])
     robot.time_step(1)
