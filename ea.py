@@ -35,12 +35,12 @@ def do_ea():
 
         genome_list = ai.select(genome_list)
 
-        print(genome_list[0].weights)
-
         genome_list = ai.crossover(genome_list)
         ai.mutate(genome_list)
+    
 
-
+    genome_list = ai.select(genome_list)
+    print(genome_list[0].weights)
 
     
     return genome_list[0]

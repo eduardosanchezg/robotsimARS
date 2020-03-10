@@ -35,16 +35,16 @@ class Genome:
 
     def __init__(self):
         self.weights = generate_genome(56)
-        grid = import_grid("untitled.bmp")
-        self.environment = environment.Environment(env_width, env_height, grid)
-        self.environment.add_line(500, -500, 500, -700)
-        self.environment.add_line(500, -700, 700, -700)
-        self.environment.add_line(700, -700, 700, -500)
-        self.environment.add_line(700, -500, 500, -500)
+        #grid = import_grid("untitled.bmp")
+        self.environment = environment.Environment(env_width, env_height, "trapezoid")
+        # self.environment.add_line(500, -500, 500, -700)
+        # self.environment.add_line(500, -700, 700, -700)
+        # self.environment.add_line(700, -700, 700, -500)
+        # self.environment.add_line(700, -500, 500, -500)
 
-        self.environment.add_line(400, -200, 300, -350)
-        self.environment.add_line(300, -350, 500, -350)
-        self.environment.add_line(500, -350, 400, -200)
+        # self.environment.add_line(400, -200, 300, -350)
+        # self.environment.add_line(300, -350, 500, -350)
+        # self.environment.add_line(500, -350, 400, -200)
         self.robot = robot.Robot(self.environment, 250, -250, 0., 60)
         self.nn = NN(self)
 
@@ -94,7 +94,7 @@ def fitness(genome):
                 non_obstacles += 1
             elif (environment.grid[i][j] == 0):
                 non_obstacles += 1
-    print("Fitness: ", covered_count / non_obstacles)
+    print("Fitness: ", covered_count , non_obstacles)
     return covered_count / non_obstacles
 
 

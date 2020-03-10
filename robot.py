@@ -64,8 +64,11 @@ class Robot:
                 v = np.dot(v,v1) / np.dot(v1,v1) * v1
 
         if not collision_points[0] and self.check_for_collision_moving(v):
-            print("Stop robot!!")
+            #print("Stop robot!!")
             return
+        new_pos = self.pos + v
+        if new_pos[0] < 0 or new_pos[1] > 0 or new_pos[0] > self.environment.dimx or new_pos[1] < -self.environment.dimy:
+            v = np.array([0,0,0])
         self.pos += v
         self.refresh_sensors()
         return collision_points[0]
@@ -92,14 +95,14 @@ class Robot:
             x1 = np.linalg.solve(a, b1)
             x2 = np.linalg.solve(a, b2)
             if (x1 >= 0).all() and (x1 <= 1).all():
-                print("Collision")
-                print(self.pos)
-                print(x1)
+                #print("Collision")
+                #print(self.pos)
+                #print(x1)
                 return True
             if (x2 >= 0).all() and (x2 <= 1).all():
-                print("Collision")
-                print(self.pos)
-                print(x2)
+                #print("Collision")
+                #print(self.pos)
+                #print(x2)
                 return True
         #print("no Collision")
         return False
