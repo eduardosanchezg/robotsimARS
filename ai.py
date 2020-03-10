@@ -4,7 +4,7 @@ import environment, robot
 from PIL import Image
 import numpy as np
 
-population_size = 10
+population_size = 20
 generations = 50
 mutation_prob = 0.1
 mutation_max_change = 0.1
@@ -95,7 +95,7 @@ def fitness(genome):
             elif (environment.grid[i][j] == 0):
                 non_obstacles += 1
     print("Fitness: ", covered_count , non_obstacles)
-    return covered_count / non_obstacles
+    return covered_count
 
 
 # NOTE: WEIGHTS FOR Δt ARE NOT IMPLEMENTED YET!!!

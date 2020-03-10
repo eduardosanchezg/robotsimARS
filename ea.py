@@ -3,11 +3,11 @@ import numpy as np
 
 def do_ea():
 
-    pop_count = 10
+    pop_count = ai.population_size
 
     time_steps = 600
 
-    evo_steps = 20
+    evo_steps = 50
 
     genome_list = []
 
@@ -34,13 +34,12 @@ def do_ea():
                 if 0 in robot.sensors.T[0]: break
 
         genome_list = ai.select(genome_list)
+        best = genome_list[0]
 
         genome_list = ai.crossover(genome_list)
         ai.mutate(genome_list)
     
-
-    genome_list = ai.select(genome_list)
-    print(genome_list[0].weights)
+    print(best.weights)
 
     
-    return genome_list[0]
+    return best
