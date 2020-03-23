@@ -176,3 +176,22 @@ def time_step(genome):
     genome.nn.input = genome.robot.sensors.T[0]
     genome.robot.accLeft(genome.nn.output[0])
     genome.robot.accRight(genome.nn.output[1])
+
+
+A = np.array([])
+B = np.array([])
+C = np.array([])
+R = np.array([])
+Q = np.array([])
+I = np.array([])
+# FIRST VERSION - TO BE COMPLETED! (we need to assign values to matrices)
+# @author: Paco Francés
+def kalman_filter(pose, covariance, action, sensors):
+    # Prediction
+    new_pose = A * pose + B * action
+    new_covariance = A * covariance * A.T + R
+    # Correction
+    K = new_covariance * C.T * (1 / (C * new_covariance * C.T + Q))
+    new_pose = new_pose + K * (sensors - C * action)
+    new_covariance = (I - K * C) * new_covariance
+    return (new_pose, new_covariance)
