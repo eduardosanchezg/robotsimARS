@@ -6,6 +6,7 @@ class Robot:
     max_sensor_range = radius + 200
     velocity = np.array([]) #len 2 vector
     environment = None
+    belief_map = []
     pos = np.array([]) # vector saving position and orientation
     sensors = None
     fitness = 0
@@ -33,6 +34,24 @@ class Robot:
 
     def stop(self):
         self.velocity = np.array([0,0])
+
+    # Assign each non-obstacle equal probability
+    # @author: Paco Francés
+    def init_belief_map(self):
+        non_obstacles = 0
+        for i in range(self.environment.dimx):
+            for j in range(self.environment.dimy):
+                if (self.environment.grid[i][j] != 1):
+                    non_obstacles += 1
+        prob = 1 / non_obstacles
+        self.belief_map = self.environment.grid.copy()
+        for i in range(self.environment.dimx):
+            for j in range(self.environment.dimy):
+                if (self.belief_map[i][j] == 1):
+                    self.belief_map[i][j] = 0
+                else:
+                    self.belief_map[i][j] = prob
+
 
     # @author: Tobias Bauer
     # Calculate movement of the robot in dt timesteps

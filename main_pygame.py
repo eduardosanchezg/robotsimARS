@@ -13,6 +13,8 @@ genome = ea.do_ea()
 #genome = ai.Genome()
 robot = genome.robot
 environment = genome.environment
+robot.environment = environment
+robot.init_belief_map()
 
 pygame.init()
 pygame.display.set_caption("ARS Robot Simulation")
