@@ -178,20 +178,36 @@ def time_step(genome):
     genome.robot.accRight(genome.nn.output[1])
 
 
-
-B = np.array([])
-C = np.array([])
-R = np.array([])
-Q = np.array([])
-I = np.array([])
-# FIRST VERSION - TO BE COMPLETED! (we need to assign values to matrices)
+motion_noise = 0
+sensor_noise = 0
 # @author: Paco Francés
 def kalman_filter(pose, covariance, action, sensors):
+    # Generate noise as random normally distributed variables defined from
+    # covariance matrices R and Q
+    R = np.array([[np.random.normal(pose[0,1]), 0, 0],
+                  [0, np.random.normal(pose[0,2]), 0],
+                  [0, 0, np.random.normal(pose[0,3])]])
+
+    Q = np.array([[np.random.normal(sensors[0,1]), 0, 0],
+                  [0, np.random.normal(sensors[0,2], 0)],
+                  [0, 0, np.random.normal(sensors[0,3])]])
+
+    motion_noise = np.random.multivariate_normal(pose.T, R)
+    sensor_noise = np.random.multivariate_normal(sensors.T, Q)
+
     A = np.array([[1, 0, 0],
                   [0, 1, 0],
                   [0, 0, 1]])
 
     C = np.array([[1, 0, 0],
+                  [0, 1, 0],
+                  [0, 0, 1]])
+
+    B = np.array([[sensor_noise * np.cos(pose[0,3]), 0],
+                  [sensor_noise * np.sin(pose[0,3]), 0],
+                  [0, sensor_noise]])
+
+    I = np.array([[1, 0, 0],
                   [0, 1, 0],
                   [0, 0, 1]])
 
