@@ -7,12 +7,12 @@ import environment, robot, ea, ai
 env_width = 1000
 env_height = 1000
 
-# environment = environment.Environment(env_width, env_height, "trapezoid")
-# robot = robot.Robot(environment,250,-250,0.,25)
-genome = ea.do_ea()
+environment = environment.Environment(env_width, env_height, "trapezoid")
+robot = robot.Robot(environment,250,-250,0.,25)
+#genome = ea.do_ea()
 #genome = ai.Genome()
-robot = genome.robot
-environment = genome.environment
+#robot = genome.robot
+#environment = genome.environment
 robot.environment = environment
 robot.init_belief_map()
 
@@ -50,7 +50,7 @@ while run:
                 robot.accRight(-1)
 
     #next_simulation_step
-    ai.time_step(genome)
+    #ai.time_step(genome)
     #robot.accLeft(moves[0])
     #robot.accLeft(moves[1])
     robot.time_step(1)
