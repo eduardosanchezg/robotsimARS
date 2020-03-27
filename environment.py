@@ -4,12 +4,16 @@ class Environment:
     grid = [] #binary 2d array
     dimx = 0
     dimy = 0
+    beaconsx = []
+    beaconsy = []
 
-    def __init__(self, dimx, dimy, room="rect"):
+    def __init__(self, dimx, dimy, beaconsx, beaconsy, room="rect"):
         self.lines = []
         self.grid = [[0 for y in range(dimy)] for x in range(dimx)]
         self.dimx = dimx
         self.dimy = dimy
+        self.beaconsx = beaconsx
+        self.beaconsy = beaconsy
         if room == "rect":
             self.add_line(0,0,dimx-1,0)
             self.add_line(0,0,0,dimy-1)

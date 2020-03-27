@@ -6,8 +6,10 @@ import environment, robot, ea, ai
 
 env_width = 1000
 env_height = 1000
+beaconsx = [100, 200, 300]
+beaconsy = [100, 200, 300]
 
-environment = environment.Environment(env_width, env_height, "trapezoid")
+environment = environment.Environment(env_width, env_height,beaconsx,beaconsy)
 robot = robot.Robot(environment,250,-250,0.,25)
 #genome = ea.do_ea()
 #genome = ai.Genome()
@@ -66,6 +68,9 @@ while run:
     y = -robot.pos[1] - math.sin(robot.pos[2]) * robot.radius
     pygame.draw.line(screen,(0,255,255),(robot.pos[0],-robot.pos[1]),(x,y),5)
 
+    # paint beacons
+    for i in range(0, len(environment.beaconsx)):
+        pygame.draw.circle(screen, (0, 0, 0), (environment.beaconsx[i], environment.beaconsy[i]), 5)
 
     font = pygame.font.SysFont('Sans', 10)
     sensor_labels = []
@@ -78,6 +83,8 @@ while run:
         x_ = robot.pos[0] + math.cos(robot.pos[2] + (math.pi/6.) * i) * (robot.radius)
         y_ = robot.pos[1] + math.sin(robot.pos[2] + (math.pi/6.) * i) * (robot.radius)
         pygame.draw.line(screen, (255, 0, 0), (x_, -y_), (robot.sensors[i][1],-robot.sensors[i][2]), 1)
+
+
 
 
     pygame.display.update()
